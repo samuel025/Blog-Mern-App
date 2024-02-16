@@ -1,0 +1,38 @@
+blog => Title => Description => Timestamp  ++ user
+user => username => password => profile picture
+
+// Define image schema
+const ImageSchema = new mongoose.Schema({
+  image: {
+    data: Buffer,
+    contentType: String
+  }
+});
+
+const Image = mongoose.model('Image', ImageSchema);
+
+// Multer setup for file upload
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// API endpoint to upload image
+app.post('/upload', upload.single('image'), async (req, res) => {
+  try {
+    const newImage = new Image({
+      image: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      }
+    });
+
+    await newImage.save();
+    res.status(201).send('Image uploaded successfully');
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    res.status(500).send('Error uploading image');
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
