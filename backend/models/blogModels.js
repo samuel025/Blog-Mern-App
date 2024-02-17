@@ -10,7 +10,7 @@ const blogSchema = mongoose.Schema({
         required : true
     },
     image_url : {
-        data : String,
+        type : String,
     }
 }, {
     timestamps : true
